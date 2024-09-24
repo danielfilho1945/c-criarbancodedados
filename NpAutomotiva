@@ -1,75 +1,111 @@
-```python
+# #Criando o Banco de Dados empresa NPAutomotiva:
+#
+# conexao = sqlite3.connect('clientes.db')
+#
+# # Criando o cursor:
+# c = conexao.cursor()
+#
+# # Criando a tabela:
+#
+# # c.execute("""CREATE TABLE  clientes (
+# #     nome text,
+# #     sobrenome text,
+# #     email text,
+# #     telefone text
+# #     )""")
+#
+# #Commit as mudanças:
+# conexao.commit()
+#
+# #Fechar o banco de dados:
+# conexao.close()
+______________________________________
+#Criando Janela:
 
-# Função para cadastrar mercadorias
+janela = tk.Tk()
+janela.title('Cadastro de Clientes')
+janela. geometry("330x350")
 
-def cadastra_mercadorias():
 
-global estoque
+def cadastrar_cliente():
+    conexao = sqlite3.connect('clientes.db')
+    c = conexao.cursor()
 
-nome = input("Digite o nome da mercadoria: ")
+    #Inserir dados na tabela:
+    c.execute("INSERT INTO clientes VALUES (:nome,:sobrenome,:email,:telefone)",
+              {
+                  'nome': entry_nome.get(),
+                  'sobrenome': entry_sobrenome.get(),
+                  'email': entry_email.get(),
+                  'telefone': entry_telefone.get()
+              })
 
-quantidade = int(input("Digite a quantidade em estoque: "))
 
-preco_unitario = float(input("Digite o preço unitário: "))
+    # Commit as mudanças:
+    conexao.commit()
 
-estoque.append((nome, quantidade, preco_unitario))
+    # Fechar o banco de dados:
+    conexao.close()
 
-print("Mercadoria cadastrada com sucesso!")
+    # #Apaga os valores das caixas de entrada
+    entry_nome.delete(0,"end")
+    entry_sobrenome.delete(0,"end")
+    entry_email.delete(0,"end")
+    entry_telefone.delete(0,"end")
 
-# Função para exibir valor total do estoque da empresa
+def exporta_clientes():
+    conexao = sqlite3.connect('clientes.db')
+    c = conexao.cursor()
 
-def exibe_valor_total():
+    # Inserir dados na tabela:
+    c.execute("SELECT *, oid FROM clientes")
+    clientes_cadastrados = c.fetchall()
+    # print(clientes_cadastrados)
+    clientes_cadastrados=pd.DataFrame(clientes_cadastrados,columns=['nome','sobrenome','email','telefone','Id_banco'])
+    clientes_cadastrados.to_excel('clientes.xlsx')
 
-global estoque
+    # Commit as mudanças:
+    conexao.commit()
 
-total = 0
+    # Fechar o banco de dados:
+    conexao.close()
 
-for mercadoria in estoque:
 
-total += mercadoria[1] * mercadoria[2]
+#Rótulos Entradas:
+label_nome = tk.Label(janela, text='Nome')
+label_nome.grid(row=0,column=0, padx=10, pady=10)
 
-print("Valor total do estoque da empresa: R$", total)
+label_sobrenome = tk.Label(janela, text='Sobrenome')
+label_sobrenome.grid(row=1, column=0, padx=10, pady=10)
 
-# Menu principal
+label_email = tk.Label(janela, text='E-mail')
+label_email.grid(row=2, column=0 , padx=10, pady=10)
 
-def menu():
+label_telefone = tk.Label(janela, text='Telefone')
+label_telefone.grid(row=3, column=0, padx=10, pady=10)
 
-while True:
+#Caixas Entradas:
+entry_nome = tk.Entry(janela , width =35)
+entry_nome.grid(row=0,column=1, padx=10, pady=10)
 
-print("\nMENU")
+entry_sobrenome = tk.Entry(janela, width =35)
+entry_sobrenome.grid(row=1, column=1, padx=10, pady=10)
 
-print("1 – Cadastrar mercadorias")
+entry_email = tk.Entry(janela, width =35)
+entry_email.grid(row=2, column=1 , padx=10, pady=10)
 
-print("2 – Exibir valor total do estoque da empresa")
+entry_telefone = tk.Entry(janela, width =35)
+entry_telefone.grid(row=3, column=1, padx=10, pady=10)
 
-print("3 – Sair")
+# Botão de Cadastrar
 
-opcao = input("Opção: ")
+botao_cadastrar = tk.Button(text='Cadastrar Cliente', command=cadastrar_cliente)
+botao_cadastrar.grid(row=4, column=0,columnspan=2, padx=10, pady=10 , ipadx = 80)
 
-if opcao == '1':
+# Botão de Exportar
 
-cadastra_mercadorias()
+botao_exportar = tk.Button(text='Exportar para Excel', command=exporta_clientes)
+botao_exportar.grid(row=5, column=0,columnspan=2, padx=10, pady=10 , ipadx = 80)
 
-elif opcao == '2':
 
-exibe_valor_total()
-
-elif opcao == '3':
-
-print("Saindo do programa...")
-
-break
-
-else:
-
-print("Opção inválida. Tente novamente.")
-
-# Inicialização do estoque
-
-estoque = []
-
-# Execução do programa
-
-menu()
-
-```
+janela.mainloop()
