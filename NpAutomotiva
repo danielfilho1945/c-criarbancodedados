@@ -1,0 +1,75 @@
+```python
+
+# Função para cadastrar mercadorias
+
+def cadastra_mercadorias():
+
+global estoque
+
+nome = input("Digite o nome da mercadoria: ")
+
+quantidade = int(input("Digite a quantidade em estoque: "))
+
+preco_unitario = float(input("Digite o preço unitário: "))
+
+estoque.append((nome, quantidade, preco_unitario))
+
+print("Mercadoria cadastrada com sucesso!")
+
+# Função para exibir valor total do estoque da empresa
+
+def exibe_valor_total():
+
+global estoque
+
+total = 0
+
+for mercadoria in estoque:
+
+total += mercadoria[1] * mercadoria[2]
+
+print("Valor total do estoque da empresa: R$", total)
+
+# Menu principal
+
+def menu():
+
+while True:
+
+print("\nMENU")
+
+print("1 – Cadastrar mercadorias")
+
+print("2 – Exibir valor total do estoque da empresa")
+
+print("3 – Sair")
+
+opcao = input("Opção: ")
+
+if opcao == '1':
+
+cadastra_mercadorias()
+
+elif opcao == '2':
+
+exibe_valor_total()
+
+elif opcao == '3':
+
+print("Saindo do programa...")
+
+break
+
+else:
+
+print("Opção inválida. Tente novamente.")
+
+# Inicialização do estoque
+
+estoque = []
+
+# Execução do programa
+
+menu()
+
+```
